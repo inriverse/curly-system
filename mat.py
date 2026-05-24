@@ -1,23 +1,31 @@
+import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.widgets import Slider 
 
-prob = 0.5
-t= np.linspace(0, 10, 100)
-fig, ax = plt.subplots(figsize=(6, 5))
-plt.subplots_adjust(bottom=0.25)
-ax.set_ylim(0, 3)
+# Streamlit slider
+prob = st.slider(
+    "Probability",
+    min_value=0.01,
+    max_value=0.99,
+    value=0.50,
+    step=0.01
+)
+
+# Data
+t = np.linspace(0, 10, 100)
 y = 1 - (1 - prob) ** t
-l = plt.plot(t, y, lw=2)
 
-ax_slider = plt.axes([0.2, 0.1, 0.65, 0.03])
-slider = Slider(ax_slider, 'probability', 0.01, 0.99, valinit=prob)
+# Create figure
+fig, ax = plt.subplots(figsize=(6, 5))
 
+# Plot
+ax.plot(t, y, lw=2)
 
-def update(val):
-    prob = slider.val
-    l[0].set_ydata(1 - (1 - prob) ** t)
-    fig.canvas.draw_idle()
+# Axis settings
+ax.set_ylim(0, 1.1)
+ax.set_xlabel("t")
+ax.set_ylabel("Probability")
+ax.set_title("1 - (1 - p)^t")
 
-slider.on_changed(update)
-plt.show()
+# Display in Streamlit
+st.pyplot(fig)
